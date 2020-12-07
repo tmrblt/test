@@ -1,0 +1,6 @@
+- name: Test windows connection
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Test win_ping 
+    win_ping:
