@@ -11,7 +11,9 @@
       become: true
       ignore_errors: true
       register: result_ping
-
+    
+    - debug: var=result_ping
+    
     - debug: var=ansible_limit
 
     - name: set errors
