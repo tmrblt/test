@@ -47,7 +47,8 @@
     - name: update tasks for Debian
       block: 
         - name: check updates for Debian
-          command: 'apt-get update'
+          apt:
+            update_cache: yes
           ignore_errors: true
           become: true
           register: result_apt_get
