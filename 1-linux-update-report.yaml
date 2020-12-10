@@ -41,7 +41,7 @@
             updatelist: "{{ update_result | json_query(jmesquery) }}"
           vars:
             jmesquery: 'results[*].envra'
-          when: update_result  
+          when: check_updates  
       when: ( ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux" )
 
     - name: update tasks for Debian
