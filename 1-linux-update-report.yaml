@@ -11,7 +11,7 @@
           name: yum-utils
           state: latest
         become: true
-        register: result_yum_utils
+        register: result_yum_utils.std_err
 
       - debug: var=result_yum_utils
       
