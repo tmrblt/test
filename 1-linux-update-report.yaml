@@ -15,7 +15,7 @@
           ignore_errors: true
           register: result_yum_utils
       
-        - name: set errors for Red Hat
+        - name: set errors
           set_fact:
             check_updates: false
             update_list: "{{ update_list + result_yum_utils.msg }}"
@@ -27,14 +27,22 @@
           yum:
             list: updates
             use_backend: yum3
+          ignore_errors: true
           register: update_result
+
+        - name: set errors
+          set_fact:
+            check_updates: false
+            update_list: "{{ update_list + update_result.msg }}"
+          when: result_yum_utils.failed
 
         - name: set updates list for Red Hat
           set_fact:
             updatelist: "{{ update_result | json_query(jmesquery) }}"
           vars:
-            jmesquery: 'results[*].envra'  
-      when: ( ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux" ) amd check_updates
+            jmesquery: 'results[*].envra'
+          when: update_result  
+      when: ( ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux" )
 
     - name: update tasks for Debian
       block: 
