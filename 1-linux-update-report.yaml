@@ -6,19 +6,6 @@
     check_updates: true
     accessed: true
   tasks:
-    - name: Check access
-      ping:
-      become: true
-      ignore_errors: true
-      register: result_ping
-
-    - name: set errors
-      set_fact:
-        check_updates: false
-        accessed: false
-        update_list: "{{ update_list + [result_ping.msg] }}"
-      when: result_ping.failed
-
     - name: list update tasks for Red Hat
       block: 
         - name: install yum-utils
