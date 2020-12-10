@@ -1,4 +1,4 @@
-- name: Report updates for Windows and Linux WMs
+- name: Report updates for Linux WMs in group {{ ansible_limit }}
   hosts: all
   gather_facts: true
   vars:
@@ -11,10 +11,6 @@
       become: true
       ignore_errors: true
       register: result_ping
-    
-    - debug: var=ansible_facts
-    
-    - debug: var=ansible_limit
 
     - name: set errors
       set_fact:
