@@ -1,6 +1,6 @@
 - name: Report updates for Windows and Linux WMs
   hosts: all
-  gather_facts: false
+  gather_facts: true
   vars:
     update_list: []
     check_updates: true
@@ -12,7 +12,7 @@
       ignore_errors: true
       register: result_ping
     
-    - debug: var=result_ping
+    - debug: var=ansible_facts
     
     - debug: var=ansible_limit
 
