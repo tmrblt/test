@@ -14,7 +14,7 @@
         </tr>
     </thead>
     <tbody>
-{% for host in groups['linux'] %}
+{% for host in groups[ansible_limit] %}
         <tr>
             <td>{{hostvars[host].ansible_hostname}}</td>
             <td>{{hostvars[host].ansible_distribution}} {{hostvars[host].ansible_distribution_version}}</td>
