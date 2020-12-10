@@ -15,7 +15,7 @@
     </thead>
     <tbody>
 {% for host in groups[ansible_limit] %}
-   {% if ( hostvars[host].accessed ) %}
+   {% if ( hostvars[host].accessed is defined) %}
            <tr>
             <td>{{hostvars[host].ansible_hostname}}</td>
             <td>{{hostvars[host].ansible_distribution}} {{hostvars[host].ansible_distribution_version}}</td>
