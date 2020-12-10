@@ -4,8 +4,22 @@
   vars:
     update_list: []
     check_updates: true
+    accessed: true
   tasks:
-    - name: update tasks for Red Hat
+    - name: Check acces
+      ping:
+      become: true
+      ignore_errors: true
+      register: result_ping
+
+    - name: set errors
+      set_fact:
+        check_updates: false
+        accessed: false
+        update_list: "{{ update_list + [result_ping.msg] }}"
+      when: result_ping.failed
+
+    - name: list update tasks for Red Hat
       block: 
         - name: install yum-utils
           yum:
@@ -42,9 +56,9 @@
           vars:
             jmesquery: 'results[*].envra'
           when: check_updates  
-      when: ( ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux" )
+      when: ( ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux" ) and accessed
 
-    - name: update tasks for Debian
+    - name: list update tasks for Debian
       block: 
         - name: check updates for Debian
           apt:
@@ -75,7 +89,7 @@
           vars:
             jmesquery: 'stdout_lines'
           when: check_updates  
-      when: ( ansible_distribution == "Ubuntu" or ansible_distribution == "Debian" )
+      when: ( ansible_distribution == "Ubuntu" or ansible_distribution == "Debian" ) and accessed
 
     - name: get date
       set_fact:
