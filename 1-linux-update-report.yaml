@@ -18,7 +18,7 @@
         - name: set errors
           set_fact:
             check_updates: false
-            update_list: "{{ update_list + result_yum_utils.msg }}"
+            update_list: "{{ update_list + [result_yum_utils.msg] }}"
           when: result_yum_utils.failed
       
         - debug: var=result_yum_utils
