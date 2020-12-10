@@ -33,7 +33,7 @@
         - name: set errors
           set_fact:
             check_updates: false
-            update_list: "{{ update_list + update_result.msg }}"
+            update_list: "{{ update_list + [update_result.msg] }}"
           when: update_result.failed
 
         - name: set updates list for Red Hat
