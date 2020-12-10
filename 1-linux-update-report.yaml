@@ -3,6 +3,7 @@
   gather_facts: true
   vars:
     update_list: []
+    check_updates: true
   tasks:
     - name: update tasks for Red Hat
       block: 
@@ -13,6 +14,13 @@
         become: true
         ignore_errors: true
         register: result_yum_utils
+      
+      - name: set errors for Red Hat
+        set_fact:
+          check_updates: false
+          update_list: "{{ update_list + result_yum_utils.msg }}"
+        when: result_yum_utils.failed
+      when: ( ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux" ) and check_updates
 
       - debug: var=result_yum_utils
       
