@@ -28,17 +28,17 @@
             list: updates
             use_backend: yum3
           ignore_errors: true
-          register: update_result
+          register: result_yum_list
 
         - name: set errors
           set_fact:
             check_updates: false
-            update_list: "{{ update_list + [update_result.msg] }}"
-          when: update_result.failed
+            update_list: "{{ update_list + [result_yum_list.msg] }}"
+          when: result_yum_list.failed
 
         - name: set updates list for Red Hat
           set_fact:
-            update_list: "{{ update_result | json_query(jmesquery) }}"
+            update_list: "{{ result_yum_list | json_query(jmesquery) }}"
           vars:
             jmesquery: 'results[*].envra'
           when: check_updates  
@@ -46,16 +46,34 @@
 
     - name: update tasks for Debian
       block: 
-      - name: list updates for Debian
-        command: 'apt list --upgradeable'
-        register: update_result
+        - name: check updates for Debian
+          command: 'apt-get update'
+          ignore_errors: true
+          register: result_apt_get
+
+        - name: set errors
+          set_fact:
+            check_updates: false
+            update_list: "{{ update_list + [result_apt_get.msg] }}"
+          when: result_apt_get.failed
+
+        - name: list updates for Debian
+          command: 'apt list --upgradeable'
+          register: result_apt_list
+
+        - name: set errors
+          set_fact:
+            check_updates: false
+            update_list: "{{ update_list + [result_apt_list.msg] }}"
+          when: result_apt_list.failed        
         
-      - name: list updates for Debian
-        set_fact:
-          update_list: "{{ update_result | json_query(jmesquery) }}"
-        vars:
-          jmesquery: 'stdout_lines'
-      when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+        - name: set updates for Debian
+          set_fact:
+            update_list: "{{ update_result | json_query(jmesquery) }}"
+          vars:
+            jmesquery: 'stdout_lines'
+          when: check_updates  
+      when: ( ansible_distribution == "Ubuntu" or ansible_distribution == "Debian" )
 
     - name: get date
       set_fact:
