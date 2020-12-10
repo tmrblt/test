@@ -19,8 +19,8 @@
             <td>{{hostvars[host].ansible_hostname}}</td>
             <td>{{hostvars[host].ansible_distribution}} {{hostvars[host].ansible_distribution_version}}</td>
             <td>{{ansible_facts['kernel']}}</td>
-            <td>{% if hostvars[host].updatelist is defined %}
-                    {% for item in hostvars[host].updatelist %}
+            <td>{% if hostvars[host].update_list is defined %}
+                    {% for item in hostvars[host].update_list %}
                        - {{ item }} <br>
                     {% endfor %}
                 {% endif  %}
