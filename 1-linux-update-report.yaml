@@ -1,6 +1,6 @@
 - name: Report updates for Windows and Linux WMs
   hosts: all
-  gather_facts: true
+  gather_facts: false
   vars:
     update_list: []
     check_updates: true
