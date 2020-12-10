@@ -45,8 +45,8 @@
 
         - name: set updates list for Red Hat
           set_fact:
-            update_list: 'There is no package for update'
-          when: check_updates  and result_yum_list == []  
+            update_list: ['There is no package for update']
+          when: check_updates  and result_yum_list.results[] == []  
 
       when: ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux"
 
