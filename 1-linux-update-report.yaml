@@ -49,6 +49,7 @@
         - name: check updates for Debian
           command: 'apt-get update'
           ignore_errors: true
+          become: true
           register: result_apt_get
 
         - name: set errors
