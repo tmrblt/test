@@ -11,9 +11,9 @@
           name: yum-utils
           state: latest
         become: true
-        register: result_yum_utils.stderr
+        register: result_yum_utils
 
-      - debug: var=result_yum_utils
+      - debug: var=result_yum_utils.stderr
       
       - name: list updates for Red Hat
         yum:
