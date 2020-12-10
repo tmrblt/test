@@ -7,35 +7,34 @@
   tasks:
     - name: update tasks for Red Hat
       block: 
-      - name: install yum-utils
-        yum:
-          name: yum-utils
-          state: latest
-        become: true
-        ignore_errors: true
-        register: result_yum_utils
+        - name: install yum-utils
+          yum:
+            name: yum-utils
+            state: latest
+          become: true
+          ignore_errors: true
+          register: result_yum_utils
       
-      - name: set errors for Red Hat
-        set_fact:
-          check_updates: false
-          update_list: "{{ update_list + result_yum_utils.msg }}"
-        when: result_yum_utils.failed
-      when: ( ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux" ) and check_updates
-
-      - debug: var=result_yum_utils
+        - name: set errors for Red Hat
+          set_fact:
+            check_updates: false
+            update_list: "{{ update_list + result_yum_utils.msg }}"
+          when: result_yum_utils.failed
       
-      - name: list updates for Red Hat
-        yum:
-          list: updates
-          use_backend: yum3
-        register: update_result
+        - debug: var=result_yum_utils
+      
+        - name: list updates for Red Hat
+          yum:
+            list: updates
+            use_backend: yum3
+          register: update_result
 
-      - name: set updates list for Red Hat
-        set_fact:
-          updatelist: "{{ update_result | json_query(jmesquery) }}"
-        vars:
-          jmesquery: 'results[*].envra'  
-      when: ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux"
+        - name: set updates list for Red Hat
+          set_fact:
+            updatelist: "{{ update_result | json_query(jmesquery) }}"
+          vars:
+            jmesquery: 'results[*].envra'  
+      when: ( ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux" ) amd check_updates
 
     - name: update tasks for Debian
       block: 
