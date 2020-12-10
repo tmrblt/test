@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+<table>
+    <thead>
+        <tr>
+            <th>Hostname</th>
+            <th>Distribution</th>
+            <th>Kernel</th>
+            <th>Updates</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for host in groups['linux'] %}
+        <tr>
+            <td>{{hostvars[host].ansible_hostname}}</td>
+            <td>{{hostvars[host].ansible_distribution}} {{hostvars[host].ansible_distribution_version}}</td>
+            <td>{{ansible_facts['kernel']}}</td>
+            <td>{% if hostvars[host].updatelist is defined %}
+                    {% for item in hostvars[host].updatelist %}
+                       - {{ item }} <br>
+                    {% endfor %}
+                {% endif  %}
+            </td>
+        </tr>
+{% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>
