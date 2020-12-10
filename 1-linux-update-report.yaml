@@ -70,7 +70,7 @@
         
         - name: set updates for Debian
           set_fact:
-            update_list: "{{ update_result | json_query(jmesquery) }}"
+            update_list: "{{ update_list | json_query(jmesquery) }}"
           vars:
             jmesquery: 'stdout_lines'
           when: check_updates  
