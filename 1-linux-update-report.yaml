@@ -14,7 +14,7 @@
         ignore_errors: true
         register: result_yum_utils
 
-      - debug: var=result_yum_utils.stderr
+      - debug: var=result_yum_utils
       
       - name: list updates for Red Hat
         yum:
