@@ -1,0 +1,50 @@
+- name: Report updates for Windows and Linux WMs
+  hosts: all
+  gather_facts: true
+  vars:
+    update_list: []
+  tasks:
+    - name: update tasks for Red Hat
+      block: 
+      - name: install yum-utils
+        yum:
+          name: yum-utils
+          state: latest
+        become: true
+      
+      - name: list updates for Red Hat
+        yum:
+          list: updates
+          use_backend: yum3
+        register: update_result
+
+      - name: set updates list
+        set_fact:
+          updatelist: "{{ update_result | json_query(jmesquery) }}"
+        vars:
+          jmesquery: 'results[*].envra'  
+      when: ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux"
+
+    - name: update tasks for Debian
+      block: 
+      - name: list updates Ubuntu
+        command: 'apt list --upgradeable'
+        register: update_result
+        
+      - name: create arrays for update Ubuntu
+        set_fact:
+          updatelist: "{{ update_result | json_query(jmesquery) }}"
+        vars:
+          jmesquery: 'stdout_lines'
+      when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+
+    - name: get date
+      set_fact:
+        date="{{ lookup('pipe','date +%Y-%m-%d-%H-%M-%S') }}"
+
+    - name: Create HTMl report
+      template:
+        src: report-linux-updates.j2
+        dest: /tmp/report-linux-updates-{{ date }}.html
+      delegate_to: KSANSIBLEPOCT1.SIMCACLS.LOCAL
+      run_once: true
