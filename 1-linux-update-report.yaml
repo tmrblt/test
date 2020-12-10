@@ -42,6 +42,12 @@
           vars:
             jmesquery: 'results[*].envra'
           when: check_updates  
+
+        - name: set updates list for Red Hat
+          set_fact:
+            update_list: 'There is no package for update'
+          when: check_updates  and result_yum_list == []  
+
       when: ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux"
 
     - name: list update tasks for Debian
