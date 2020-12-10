@@ -15,9 +15,9 @@
     </thead>
     <tbody>
 {% for host in groups[ansible_limit] %}
-    {% if ( hostvars[host].check_updates is not defined) %}
+    {% if ( hostvars[host].update_list is not defined) %}
        <tr>
-            <td>{{inventory_hostname}}</td>
+            <td>{{ inventory_hostname }}</td>
             <td> </td>
             <td> </td>
             <td> Unreachable </td>

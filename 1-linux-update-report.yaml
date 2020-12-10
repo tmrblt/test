@@ -21,8 +21,6 @@
             update_list: "{{ update_list + [result_yum_utils.msg] }}"
           when: result_yum_utils.failed
       
-        - debug: var=result_yum_utils
-      
         - name: list updates for Red Hat
           yum:
             list: updates
@@ -42,7 +40,7 @@
           vars:
             jmesquery: 'results[*].envra'
           when: check_updates  
-      when: ( ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux" )
+      when: ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux"
 
     - name: list update tasks for Debian
       block: 
@@ -75,7 +73,7 @@
           vars:
             jmesquery: 'stdout_lines'
           when: check_updates  
-      when: ( ansible_distribution == "Ubuntu" or ansible_distribution == "Debian" )
+      when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
 
     - name: get date
       set_fact:
