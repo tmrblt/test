@@ -18,7 +18,7 @@
           use_backend: yum3
         register: update_result
 
-      - name: set updates list
+      - name: set updates list for Red Hat
         set_fact:
           updatelist: "{{ update_result | json_query(jmesquery) }}"
         vars:
@@ -27,11 +27,11 @@
 
     - name: update tasks for Debian
       block: 
-      - name: list updates Ubuntu
+      - name: list updates for Debian
         command: 'apt list --upgradeable'
         register: update_result
         
-      - name: create arrays for update Ubuntu
+      - name: list updates for Debian
         set_fact:
           updatelist: "{{ update_result | json_query(jmesquery) }}"
         vars:
@@ -42,7 +42,7 @@
       set_fact:
         date="{{ lookup('pipe','date +%Y-%m-%d-%H-%M-%S') }}"
 
-    - name: Create HTMl report
+    - name: create HTML report
       template:
         src: report-linux-updates.j2
         dest: /tmp/report-linux-updates-{{ date }}.html
