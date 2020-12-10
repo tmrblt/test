@@ -15,7 +15,8 @@
     </thead>
     <tbody>
 {% for host in groups[ansible_limit] %}
-        <tr>
+   {% if ( hostvars[host].accessed ) %}
+           <tr>
             <td>{{hostvars[host].ansible_hostname}}</td>
             <td>{{hostvars[host].ansible_distribution}} {{hostvars[host].ansible_distribution_version}}</td>
             <td>{{ansible_facts['kernel']}}</td>
@@ -26,6 +27,7 @@
                 {% endif  %}
             </td>
         </tr>
+    {% endif  %}
 {% endfor %}
     </tbody>
 </table>
