@@ -28,6 +28,8 @@
           ignore_errors: true
           register: result_yum_list
 
+        - debug: var=result_yum_list
+
         - name: set errors
           set_fact:
             check_updates: false
