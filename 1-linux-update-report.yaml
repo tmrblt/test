@@ -4,7 +4,6 @@
   vars:
     update_list: []
     check_updates: true
-    accessed: true
   tasks:
     - name: list update tasks for Red Hat
       block: 
@@ -43,7 +42,7 @@
           vars:
             jmesquery: 'results[*].envra'
           when: check_updates  
-      when: ( ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux" ) and accessed
+      when: ( ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux" )
 
     - name: list update tasks for Debian
       block: 
@@ -76,7 +75,7 @@
           vars:
             jmesquery: 'stdout_lines'
           when: check_updates  
-      when: ( ansible_distribution == "Ubuntu" or ansible_distribution == "Debian" ) and accessed
+      when: ( ansible_distribution == "Ubuntu" or ansible_distribution == "Debian" )
 
     - name: get date
       set_fact:
