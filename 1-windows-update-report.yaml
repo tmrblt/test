@@ -21,7 +21,7 @@
     - name: set errors
       set_fact:
         check_updates: false
-        update_list: "{{ update_list + [update_result.stderr] }}"
+        update_list: "{{ update_list + [update_result.msg] }}"
       when: update_result.failed
 
     - debug: var=update_result
