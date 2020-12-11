@@ -36,4 +36,4 @@
       force_basic_auth: yes
       status_code: 204
     when: '"2019" in productname.value'
-    delegate_to: tower-01
+    delegate_to: ksansiblepoct1.simcacls.local
