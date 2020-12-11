@@ -69,7 +69,7 @@
 
         - name: set error for if reboot is required
           set_fact:
-            reboot_required: 'need_restart.stderr'
+            reboot_required: need_restart.stderr
           when: need_restart.stderr != ""
 
         - debug: var=reboot_required
@@ -108,6 +108,11 @@
           vars:
             jmesquery: 'stdout_lines'
           when: check_updates  
+
+        - name: set reboot is not required
+          set_fact:
+            reboot_required: 'no' 
+            
       when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
 
     - name: get date
