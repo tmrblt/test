@@ -55,12 +55,12 @@
           ignore_errors: true
           register: need_restart
 
+        - debug: var=need_restart
+
         - name: set if reboot reboot_required
           set_fact:
             reboot_required: 'yes'
           when: need_restart.stdout_lines[]|last == "1"
-
-        - debug: var=need_restart
 
       when: ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux"
 
