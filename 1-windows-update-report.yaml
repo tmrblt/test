@@ -3,6 +3,7 @@
   gather_facts: true
   vars:
     check_updates: true
+    reboot_required: false
     update_list: []
   tasks:
 #    - debug: var=ansible_facts
@@ -43,6 +44,11 @@
       set_fact:
         update_list: ['There is no package for update']
       when: check_updates and (update_list[0] is not defined or update_list is not defined)  
+
+    - name: set reboot required
+      set_fact:
+        reboot_required: True
+      when: (not update_result.failed) and (update_result.reboot_required)
 
     - name: get date
       set_fact:
