@@ -50,12 +50,12 @@
           when: check_updates and (result_yum_list.results[0] is not defined)  
 
         - name: check if reboot reboot_required
-          command: sudo needs-restarting  -s; echo $?
+          command: sudo needs-restarting  -r; echo $?
           become: true
           ignore_errors: true
           register: need_restart
 
-        - debug: var=need_restart.stdout
+        - debug: var=need_restart
 
       when: ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux"
 
