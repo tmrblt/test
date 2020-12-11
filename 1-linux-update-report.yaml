@@ -143,5 +143,5 @@
       template:
         src: report-linux-updates.j2
         dest: /tmp/report-linux-updates-{{ date }}.html
-      delegate_to: report
+      delegate_to: tower-01
       run_once: true
