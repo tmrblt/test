@@ -4,13 +4,13 @@
   tasks:
   - name: Remove old file, if present
     win_file:
-      path: C:\powershell.ps1
+      path: C:\test-script.ps1
       state: absent
     
-  - name: Copy a single file
-    win_copy:
-      src: /tmp/powershell.ps1
-      dest: C:\powershell.ps1
+  - name: Touch a file 
+    win_file:
+      path: C:\test-script.ps1
+      state: touch
   
   - name: Add a line to a file 
     win_lineinfile:
