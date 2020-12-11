@@ -4,30 +4,17 @@
   tasks:
   - name: Remove old file, if present
     win_file:
-      path: C:\test-script.ps1
+      path: C:\powershell.ps1
       state: absent
     
-  - name: Touch a file 
-    win_file:
-      path: C:\test-script.ps1
-      state: touch
+  - name: Copy a single file
+    win_copy:
+      src: /tmp/powershell.ps1
+      dest: C:\powershell.ps1
+    delegate_to: tower-01
   
-  - name: Add a line to a file 
-    win_lineinfile:
-      path: C:\test-script.ps1
-      line: >
-        $a=0
-        $b=0
-        $strComputer = "localhost"
-        $a=Get-WmiObject Win32_OperatingSystem -ComputerName $strComputer | fl *freePhysical* | Out-String
-        $b=Get-WmiObject Win32_OperatingSystem -ComputerName $strComputer | fl *totalvisiblememory* | Out-String
-        $a = $a -replace '\D+(\d+)','$1'
-        $b = $b -replace '\D+(\d+)','$1'
-        $result = [math]::Round($a/$b*10000)/100
-        Write-Host "Memory Usage: $result"
-
   - name: Execute a comand in the remote shell, stdout goes to the specified file on the remote
-    win_shell: C:\test-script.ps1 >> C:\output-1.txt
+    win_shell: C:\powershell.ps1 >> C:\output-1.txt
     register: script_result
   
   - name: get content
