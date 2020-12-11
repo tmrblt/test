@@ -35,6 +35,6 @@
       validate_certs: no
       force_basic_auth: yes
       status_code: 204
-    when: '2019' in productname.value
+    when: '"2019" in productname.value'
     delegate_to: tower-01
       
