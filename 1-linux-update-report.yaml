@@ -72,7 +72,7 @@
             reboot_required: 'need_restart.stderr'
           when: need_restart.stderr != ""
 
-        
+        - debug: var=reboot_required
         
 
       when: ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux"
