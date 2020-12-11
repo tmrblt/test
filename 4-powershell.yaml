@@ -23,7 +23,7 @@
     win_lineinfile:
       path: C:\test-script.ps1
       line: |
-        "{{ ps_script }}"
+        {{ ps_script }}
 
   - name: Execute a comand in the remote shell, stdout goes to the specified file on the remote
     win_shell: C:\test-script.ps1 >> C:\output-1.txt
