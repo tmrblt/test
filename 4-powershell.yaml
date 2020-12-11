@@ -6,6 +6,11 @@
     win_file:
       path: C:\test-script.ps1
       state: absent
+  
+  - name: Remove old file, if present
+    win_file:
+      path: C:\output-1.txt
+      state: absent
     
   - name: Touch a file 
     win_file:
