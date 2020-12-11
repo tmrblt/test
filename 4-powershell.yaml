@@ -1,0 +1,24 @@
+- name: Report updates for Windows WMs
+  hosts: all
+  gather_facts: true
+  tasks:
+  - name: Remove old file, if present
+    win_file:
+      path: C:\test-script.ps1
+      state: absent
+    
+  - name: Touch a file 
+    win_file:
+      path: C:\test-script.ps-1
+      state: touch
+  
+  - name: Add a line to a file and ensure the resulting file uses unix line separators
+    win_lineinfile:
+      path: C:\test-script.ps-1
+      line: get-content env:computername
+
+  - name: Execute a comand in the remote shell, stdout goes to the specified file on the remote
+    ansible.windows.win_shell: C:\test-script.ps1 >> C:\output-1.txt
+    register: script_result
+
+  - debug: var=script_result
