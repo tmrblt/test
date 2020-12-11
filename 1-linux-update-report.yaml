@@ -58,7 +58,7 @@
         - name: set if reboot reboot_required
           set_fact:
             reboot_required: 'yes'
-          when: need_restart.stdoutlines[]|last == "1"
+          when: need_restart.stdout_lines[]|last == "1"
 
         - debug: var=need_restart
 
