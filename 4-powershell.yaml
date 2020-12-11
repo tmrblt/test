@@ -34,14 +34,12 @@
   
   - name: set fact content
     set_fact:
-      script_result: "{{ content.stdout }} "
+      script_result: "{{ content.stdout_lines }} "
 
   - name: write content
     debug:  
       msg: "{{ content.stdout_lines }} "
-
-
-  
+ 
   - name: get date
     set_fact:
       date="{{ lookup('pipe','date +%Y-%m-%d-%H-%M-%S') }}"

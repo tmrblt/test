@@ -29,7 +29,9 @@
             <td>{{hostvars[host].ansible_distribution}} {{hostvars[host].ansible_distribution_version}}</td>
             <td>{{ansible_facts['kernel']}}</td>
             <td>{% if ( hostvars[host].script_result is defined ) %}
-                {{ hostvars[host].script_result }}
+                   {% for item in hostvars[host].script_result %}
+                      - {{ item }} <br>
+                   {% endfor %}
                 {% endif  %}
             </td>
         </tr>
