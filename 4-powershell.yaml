@@ -21,15 +21,8 @@
     win_lineinfile:
       path: C:\test-script.ps1
       line: |
-        $a=0
-        $b=0
-        $strComputer = "localhost"
-        $a=Get-WmiObject Win32_OperatingSystem -ComputerName $strComputer | fl *freePhysical* | Out-String
-        $b=Get-WmiObject Win32_OperatingSystem -ComputerName $strComputer | fl *totalvisiblememory* | Out-String
-        $a = $a -replace '\D+(\d+)','$1'
-        $b = $b -replace '\D+(\d+)','$1'
-        $result = [math]::Round($a/$b*10000)/100
-        Write-Output "Memory Usage: $result"
+        Get-NetIPAddress
+        Get-NetIPAddress
 
   - name: Execute a comand in the remote shell, stdout goes to the specified file on the remote
     win_shell: C:\test-script.ps1 >> C:\output-1.txt
@@ -41,7 +34,7 @@
   
   - name: set fact content
     set_fact:
-      script_result: "{{ content.stdout_lines[0] }} "
+      script_result: "{{ content.stdout }} "
 
   - name: write content
     debug:  
