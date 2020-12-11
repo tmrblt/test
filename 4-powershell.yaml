@@ -9,7 +9,7 @@
     
   - name: Touch a file 
     win_file:
-      path: C:\test-script.ps-1
+      path: C:\test-script.ps1
       state: touch
   
   - name: Add a line to a file 
