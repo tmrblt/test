@@ -4,6 +4,7 @@
   vars:
     update_list: []
     check_updates: true
+    reboot_required: 'no'
   tasks:
     - name: list update tasks for Red Hat
       block: 
@@ -47,6 +48,14 @@
           set_fact:
             update_list: ['There is no package for update']
           when: check_updates  and result_yum_list.results[] == []  
+
+        - name: check if reboot reboot_required
+          command: sudo needs-restarting  -s; echo $?
+          become: true
+          ignore_errors: true
+          register: need_restart
+
+        - debug: var=need_restart.stdout
 
       when: ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux"
 
