@@ -70,7 +70,7 @@
         - name: set error for if reboot is required
           set_fact:
             reboot_required: 'need_restart.stderr'
-          when: need_restart.stderr is defined
+          when: need_restart.stderr !== ""
 
         
         
