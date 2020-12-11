@@ -42,7 +42,7 @@
     - name: set updates list for Windows
       set_fact:
         update_list: ['There is no package for update']
-      when: check_updates and (update_list[0] is not defined)  
+      when: check_updates and (update_list is not defined)  
 
     - name: get date
       set_fact:
