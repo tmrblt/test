@@ -48,7 +48,6 @@
     - name: set reboot required
       set_fact:
         reboot_required: False
-      when: (not update_result.failed) and (update_result.reboot_required)
 
     - name: set reboot required
       set_fact:
