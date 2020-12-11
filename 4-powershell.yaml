@@ -27,4 +27,4 @@
 
   - name: write content
     debug:  
-    msg: "{{ content.stdout_lines }} "
+      msg: "{{ content.stdout_lines }} "
