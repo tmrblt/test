@@ -12,9 +12,9 @@
       path: C:\test-script.ps-1
       state: touch
   
-  - name: Add a line to a file and ensure the resulting file uses unix line separators
+  - name: Add a line to a file 
     win_lineinfile:
-      path: C:\test-script.ps-1
+      path: C:\test-script.ps1
       line: 'get-content env:computername'
 
   - name: Execute a comand in the remote shell, stdout goes to the specified file on the remote
