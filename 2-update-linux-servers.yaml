@@ -1,0 +1,154 @@
+- name: Report updates for Linux WMs in group {{ ansible_limit }}
+  hosts: all
+  gather_facts: true
+  vars:
+    update_list: []
+    check_updates: true
+    reboot_required: 'no'
+  tasks:
+    - name: list update tasks for Red Hat
+      block: 
+        - name: update all packages Red Hat
+          yum:
+            name: '*'
+            state: latest
+          become: true
+          ignore_errors: true
+
+        - name: install yum-utils
+          yum:
+            name: yum-utils
+            state: latest
+          become: true
+          ignore_errors: true
+          register: result_yum_utils
+      
+        - name: set errors
+          set_fact:
+            check_updates: false
+            update_list: "{{ update_list + [result_yum_utils.msg] }}"
+          when: result_yum_utils.failed
+      
+        - name: list updates for Red Hat
+          yum:
+            list: updates
+            use_backend: yum3
+          ignore_errors: true
+          register: result_yum_list
+
+        - debug: var=result_yum_list
+
+        - name: set errors
+          set_fact:
+            check_updates: false
+            update_list: "{{ update_list + [result_yum_list.msg] }}"
+          when: result_yum_list.failed
+
+        - name: set updates list for Red Hat
+          set_fact:
+            update_list: "{{ result_yum_list | json_query(jmesquery) }}"
+          vars:
+            jmesquery: 'results[*].envra'
+          when: check_updates  
+
+        - name: set updates list for Red Hat
+          set_fact:
+            update_list: ['There is no package for update']
+          when: check_updates and (result_yum_list.results[0] is not defined)  
+
+        - name: check if reboot reboot_required
+          shell: 'needs-restarting  -r; echo $?'
+          become: true
+          ignore_errors: true
+          register: need_restart
+
+        - debug: var=need_restart.stderr
+
+        - name: set reboot is required
+          set_fact:
+            reboot_required: 'yes'
+          when: need_restart.stdout_lines[-1] == "1"
+
+        - name: set reboot is not required
+          set_fact:
+            reboot_required: 'no'
+          when: need_restart.stdout_lines[-1] == "0"
+
+        - name: set error for if reboot is required
+          set_fact:
+            reboot_required: "{{ need_restart.stderr }}"
+          when: need_restart.stderr != ""
+
+        - debug: var=reboot_required
+        
+
+      when: ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux"
+
+    - name: list update tasks for Debian
+      block: 
+        - name: check updates for Debian
+          apt:
+            update_cache: yes
+          ignore_errors: true
+          become: true
+          register: result_apt_get
+
+        - name: set errors
+          set_fact:
+            check_updates: false
+            update_list: "{{ update_list + [result_apt_get.msg] }}"
+          when: result_apt_get.failed
+
+        - name: list updates for Debian
+          command: 'apt list --upgradeable'
+          register: result_apt_list
+
+        - name: set errors
+          set_fact:
+            check_updates: false
+            update_list: "{{ update_list + [result_apt_list.msg] }}"
+          when: result_apt_list.failed        
+        
+        - name: set updates for Debian
+          set_fact:
+            update_list: "{{ update_list | json_query(jmesquery) }}"
+          vars:
+            jmesquery: 'stdout_lines'
+          when: check_updates   
+
+        - name: check if reboot reboot_required
+          shell: 'needrestart -q; echo $?'
+          become: true
+          ignore_errors: true
+          register: need_restart
+
+        - debug: var=need_restart.stderr
+
+        - name: set reboot is required
+          set_fact:
+            reboot_required: 'yes'
+          when: need_restart.stdout_lines[-1] != "0"
+
+        - name: set reboot is not required
+          set_fact:
+            reboot_required: 'no'
+          when: need_restart.stdout_lines[-1] == "0"
+
+        - name: set error for if reboot is required
+          set_fact:
+            reboot_required: "{{ need_restart.stderr }}"
+          when: need_restart.stderr != ""
+
+        - debug: var=reboot_required
+      when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+
+    - name: get date
+      set_fact:
+        date="{{ lookup('pipe','date +%Y-%m-%d-%H-%M-%S') }}"
+
+    - name: create HTML report
+      template:
+        src: report-linux-updates.j2
+        dest: /tmp/report-linux-updates-{{ date }}.html
+      delegate_to: tower-01
+      run_once: true
