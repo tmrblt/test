@@ -32,6 +32,8 @@
   - name: get content
     win_shell: 'type C:\output-1.txt'  
     register: content
+
+    debug: var="{{ content }}"
   
   - name: set fact content
     set_fact:
