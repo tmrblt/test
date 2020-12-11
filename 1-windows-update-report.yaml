@@ -3,7 +3,7 @@
   gather_facts: true
   vars:
     check_updates: true
-    updatelist: []
+    update_list: []
   tasks:
 #    - debug: var=ansible_facts
 
