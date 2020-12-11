@@ -13,7 +13,16 @@
         </tr>
     </thead>
     <tbody>
-{% for host in groups['ansible_limit'] %}
+{% for host in groups[ansible_limit] %}
+    {% if ( hostvars[host].update_list is not defined) %}
+       <tr>
+            <td>{{ host }}</td>
+            <td> </td>
+            <td> </td>
+            <td> Unreachable </td>
+        </tr>
+    
+    {% else  %}
         <tr>
             <td>{{hostvars[host].ansible_hostname}}</td>
             <td>{{hostvars[host].ansible_distribution}}</td>
