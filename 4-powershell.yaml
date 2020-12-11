@@ -32,23 +32,24 @@
         Write-Output "Memory Usage: $result"
 
   - name: Execute a comand in the remote shell, stdout goes to the specified file on the remote
-    win_shell: C:\test-script.ps1 >> C:\output-1.txt
+    win_shell: C:\test-script.ps1 #>> C:\output-1.txt
     register: script_result
-  
+  - debug: var=script_result
+
   - name: get content
     win_shell: 'type C:\output-1.txt'  
     register: content
+  - debug: var=content
   
   - name: set fact content
     set_fact:
       script_result: "{{ content.stdout_lines }} "
+  - debug: var=script_result
 
   - name: write content
     debug:  
       msg: "{{ content.stdout_lines }} "
-
-
-  
+    
   - name: get date
     set_fact:
       date="{{ lookup('pipe','date +%Y-%m-%d-%H-%M-%S') }}"
