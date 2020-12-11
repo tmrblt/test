@@ -10,6 +10,7 @@
             <th>Hostname</th>
             <th>Distribution</th>
             <th>Kernel</th>
+            <th>Reboot<br>Required</th>
             <th>Updates</th>
         </tr>
     </thead>
@@ -20,6 +21,7 @@
             <td>{{ host }}</td>
             <td> </td>
             <td> </td>
+            <td> </td>
             <td> Unreachable </td>
         </tr>
     
@@ -28,6 +30,7 @@
             <td>{{hostvars[host].ansible_hostname}}</td>
             <td>{{hostvars[host].ansible_distribution}} {{hostvars[host].ansible_distribution_version}}</td>
             <td>{{ansible_facts['kernel']}}</td>
+            <td>{{hostvars[host].reboot_required}}</td>
             <td>{% if ( hostvars[host].update_list is defined ) %}
                     {% for item in hostvars[host].update_list %}
                        - {{ item }} <br>
