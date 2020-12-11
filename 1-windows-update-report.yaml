@@ -1,0 +1,41 @@
+- name: Report updates for Windows WMs
+  hosts: all
+  gather_facts: true
+  vars:
+    updatelist: []
+  tasks:
+#    - debug: var=ansible_facts
+
+    - name: Check for updates 
+      win_updates:
+        category_names:
+          - SecurityUpdates
+          - CriticalUpdates
+          - UpdateRollups
+        state: searched
+        log_path: C:\ansible_wu.txt
+      register: update_result
+ 
+    - debug: var=update_result
+
+    - name: print titles of updates
+      debug: msg=""{{ update_result | json_query(jmesquery) }}""
+      vars:
+        jmesquery: '*.*.title[]'
+
+    - name: edit list for updates
+      set_fact:
+        updatelist: "{{ update_result | json_query(jmesquery) }}"
+      vars:
+        jmesquery: '*.*.title[]'
+
+    - name: get date
+      set_fact:
+        date="{{ lookup('pipe','date +%Y-%m-%d-%H-%M-%S') }}"
+
+    - name: Create HTMl report
+      template:
+        src: report-windows-updates.j2
+        dest: /tmp/report-windows-updates-{{ date }}.html
+      delegate_to: tower-01
+      run_once: true
