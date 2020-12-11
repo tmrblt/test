@@ -2,6 +2,7 @@
   hosts: all
   gather_facts: true
   vars:
+    check_updates: true
     updatelist: []
   tasks:
 #    - debug: var=ansible_facts
@@ -14,25 +15,39 @@
           - UpdateRollups
         state: searched
         log_path: C:\ansible_wu.txt
+      ignore_errors: true
       register: update_result
- 
+    
+    - name: set errors
+      set_fact:
+        check_updates: false
+        update_list: "{{ update_list + [update_result.stderr] }}"
+      when: update_result.failed
+
     - debug: var=update_result
 
     - name: print titles of updates
       debug: msg=""{{ update_result | json_query(jmesquery) }}""
       vars:
         jmesquery: '*.*.title[]'
+      when: check_updates
 
     - name: edit list for updates
       set_fact:
         updatelist: "{{ update_result | json_query(jmesquery) }}"
       vars:
         jmesquery: '*.*.title[]'
+      when: check_updates
+
+    - name: set updates list for Windows
+      set_fact:
+        update_list: ['There is no package for update']
+      when: check_updates and (updatelist[0] is not defined)  
 
     - name: get date
       set_fact:
         date="{{ lookup('pipe','date +%Y-%m-%d-%H-%M-%S') }}"
-
+  
     - name: Create HTMl report
       template:
         src: report-windows-updates.j2
