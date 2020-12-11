@@ -38,7 +38,24 @@
   - name: get content
     win_shell: 'type C:\output-1.txt'  
     register: content
+  
+  - name: set fact content
+    set_fact:
+      script_result: "{{ content.stdout_lines }} "
 
   - name: write content
     debug:  
       msg: "{{ content.stdout_lines }} "
+
+
+  
+  - name: get date
+    set_fact:
+      date="{{ lookup('pipe','date +%Y-%m-%d-%H-%M-%S') }}"
+
+  - name: create HTML report
+    template:
+      src: report-powershell.j2
+      dest: /tmp/report-powershell-{{ date }}.html
+    delegate_to: tower-01
+    run_once: true

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+<table>
+    <thead>
+        <tr>
+            <th>Hostname</th>
+            <th>Distribution</th>
+            <th>Kernel</th>
+            <th>Reboot<br>Required</th>
+            <th>Updates</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for host in groups[ansible_limit] %}
+    {% if ( hostvars[host].script_result is not defined) %}
+       <tr>
+            <td>{{ host }}</td>
+            <td> </td>
+            <td> </td>
+            <td> Unreachable </td>
+        </tr>
+    
+    {% else  %}
+           <tr>
+            <td>{{hostvars[host].ansible_hostname}}</td>
+            <td>{{hostvars[host].ansible_distribution}} {{hostvars[host].ansible_distribution_version}}</td>
+            <td>{{ansible_facts['kernel']}}</td>
+            <td>{% if ( hostvars[host].script_result is defined ) %}
+                {{ hostvars[host].script_result %}}
+                {% endif  %}
+            </td>
+        </tr>
+    {% endif  %}
+{% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>
