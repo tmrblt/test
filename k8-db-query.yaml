@@ -1,0 +1,29 @@
+- name: postgresql
+  hosts: localhost
+  vars:
+    query: "{{ query }}"
+    db_host: "{{ db_host }}"
+  tasks:
+  - name: postgre test
+    postgresql_query:
+      db: awx
+      login_host: "{{ db_host }}"
+      login_user: awx
+      login_password: redhat
+      query: "{{ query }}"
+#      query: SELECT version()
+#      query: SELECT datname FROM pg_database
+#      query: SELECT table_name FROM information_schema.tables;
+#      query: CREATE TABLE test_table (user_id serial PRIMARY KEY, username VARCHAR ( 50 ) UNIQUE NOT NULL);
+    register: result1
+
+#  - name: Create a new database with name "acme"
+#    postgresql_db:
+#      name: acme
+#      login_host: 192.168.191.170
+#      login_user: awx
+#      login_password: redhat
+#    register: result2
+
+  - debug: var=result1
+#  - debug: var=result2
