@@ -12,6 +12,17 @@
           - SecurityUpdates
           - CriticalUpdates
           - UpdateRollups
+        state: present
+        log_path: C:\ansible_wu.txt
+      ignore_errors: true
+      register: before_update_result
+
+    - name: Check for updates 
+      win_updates:
+        category_names:
+          - SecurityUpdates
+          - CriticalUpdates
+          - UpdateRollups
         state: searched
         log_path: C:\ansible_wu.txt
       ignore_errors: true
