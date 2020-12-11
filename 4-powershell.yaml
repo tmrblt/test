@@ -18,7 +18,7 @@
       line: get-content env:computername
 
   - name: Execute a comand in the remote shell, stdout goes to the specified file on the remote
-    ansible.windows.win_shell: C:\test-script.ps1 >> C:\output-1.txt
+    win_shell: C:\test-script.ps1 >> C:\output-1.txt
     register: script_result
 
   - debug: var=script_result
