@@ -107,12 +107,32 @@
             update_list: "{{ update_list | json_query(jmesquery) }}"
           vars:
             jmesquery: 'stdout_lines'
-          when: check_updates  
+          when: check_updates   
+
+        - name: check if reboot reboot_required
+          shell: 'needrestart -s; echo $?'
+          become: true
+          ignore_errors: true
+          register: need_restart
+
+        - debug: var=need_restart.stderr
+
+        - name: set reboot is required
+          set_fact:
+            reboot_required: 'yes'
+          when: need_restart.stdout_lines[-1] == "1"
 
         - name: set reboot is not required
           set_fact:
-            reboot_required: 'no' 
+            reboot_required: 'no'
+          when: need_restart.stdout_lines[-1] == "0"
 
+        - name: set error for if reboot is required
+          set_fact:
+            reboot_required: "{{ need_restart.stderr }}"
+          when: need_restart.stderr != ""
+
+        - debug: var=reboot_required
       when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
 
     - name: get date
