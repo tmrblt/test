@@ -60,7 +60,7 @@
         - name: set if reboot reboot_required
           set_fact:
             reboot_required: 'yes'
-          when: need_restart.stdout_lines[]|last == "1"
+          when: need_restart.stdout_lines[-1] == "1"
 
       when: ansible_distribution == "RedHat" or ansible_distribution == "Fedora"  or ansible_distribution == "OracleLinux"
 
