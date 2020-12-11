@@ -55,7 +55,7 @@
           ignore_errors: true
           register: need_restart
 
-        - debug: var=need_restart
+        - debug: var=need_restart.stdout_lines
 
         - name: set if reboot reboot_required
           set_fact:
