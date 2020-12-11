@@ -49,6 +49,8 @@
             update_list: ['There is no package for update']
           when: check_updates and (result_yum_list.results[] is defined)  
 
+        - debug: var=result_yum_list
+
         - name: check if reboot reboot_required
           command: sudo needs-restarting  -s; echo $?
           become: true
