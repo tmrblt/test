@@ -110,7 +110,7 @@
           when: check_updates   
 
         - name: check if reboot reboot_required
-          shell: 'needrestart -s; echo $?'
+          shell: 'needrestart -q; echo $?'
           become: true
           ignore_errors: true
           register: need_restart
