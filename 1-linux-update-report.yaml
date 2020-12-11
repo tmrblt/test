@@ -143,5 +143,5 @@
       template:
         src: report-linux-updates.j2
         dest: /tmp/report-linux-updates-{{ date }}.html
-      delegate_to: tower-01
+      delegate_to: ksansiblepoct1.simcacls.local
       run_once: true
