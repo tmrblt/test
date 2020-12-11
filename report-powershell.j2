@@ -30,7 +30,9 @@
             <td>{{ansible_facts['kernel']}}</td>
             <td>{% if ( hostvars[host].script_result is defined ) %}
                    {% for item in hostvars[host].script_result %}
-                      - {{ item }} <br>
+                      {% if item != '' %}
+                         {{ item }} <br>
+                       {% end if %}}
                    {% endfor %}
                 {% endif  %}
             </td>
