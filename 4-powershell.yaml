@@ -48,5 +48,5 @@
     template:
       src: report-powershell.j2
       dest: /tmp/report-powershell-{{ date }}.html
-    delegate_to: ksansiblepoct1.simcacls.local
+    delegate_to: tower-01
     run_once: true
