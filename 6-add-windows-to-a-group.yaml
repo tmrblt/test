@@ -16,24 +16,25 @@
 
   - debug: var=ansible_facts.hostname
 
-#  - name: Add Windows 2019 servers to windows2019 group
-#    uri:
-#      url: {{ post url }}
-#      method: post
-#      body_format: json
-#      body: >
-#        {
-#          "name": "{{ ansible_facts.hostname }}",
-#          "description": "",
-#          "enabled": true,
-#          "instance_id": "",
-#          "variables": ""
-#        }
-#      user: admin
-#      password: redhat
-#      src: /tmp/file.json
-#      validate_certs: no
-#      force_basic_auth: yes
-#      status_code: 204
-#    delegate_to: tower-01
+  - name: Add Windows 2019 servers to windows2019 group
+    uri:
+      url: {{ post url }}
+      method: post
+      body_format: json
+      body: >
+        {
+          "name": "{{ ansible_facts.hostname }}",
+          "description": "",
+          "enabled": true,
+          "instance_id": "",
+          "variables": ""
+        }
+      user: admin
+      password: redhat
+      src: /tmp/file.json
+      validate_certs: no
+      force_basic_auth: yes
+      status_code: 204
+    when: '2019' in productname.value
+    delegate_to: tower-01
       
