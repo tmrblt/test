@@ -1,24 +1,28 @@
-- name: Report updates for Windows WMs
+- name: Add Windows Server to a Group
   hosts: windows
   vars:
-    post_url: "{{ post_url }}"
-    user: "{{ user }}"
-    password: "{{ password }}"
+    tower_host: "{{ tower_host }}"            #'https://{{ tower_host }}/v2/groups/{{ group_ID  }}/hosts/'
+    tower_user: "{{ tower_user }}"
+    tower_password: "{{ tower_password }}"
+    group_id: "{{ group_id }}"
+    registry_path: "{{ registry_path }}"    #'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+    registry_key: "{{ registry_key }}"      #'ProductName'
+    keyword: "{{ keyword }}"                #2019
   gather_facts: true
   tasks:
   - name: Obtain information about a registry key using short form
     win_reg_stat:
-      path: 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
-      name: ProductName
-    register: productname 
-  
-  - debug: var=productname.value
+      path: "{{ registry_path }}"           #'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+      name: "{{ registry_key }}"            #'ProductName'
+    register: result_regkey
+
+  - debug: var=result_regkey
 
   - debug: var=ansible_facts.hostname
 
   - name: Add Windows 2019 servers to windows2019 group
     uri:
-      url: {{ post url }}
+      url: "https://{{ tower_host }}/api/v2/groups/{{ group_id }}/hosts/"
       method: post
       body_format: json
       body: >
@@ -29,11 +33,13 @@
           "instance_id": "",
           "variables": ""
         }
-      user: admin
-      password: redhat
-      src: /tmp/file.json
+      user: "{{ tower_user }}"
+      password: "{{ tower_password }}"
       validate_certs: no
       force_basic_auth: yes
       status_code: 204
-    when: '"2019" in productname.value'
-    delegate_to: ksansiblepoct1.simcacls.local
+    register: result_post
+    when: keyword in result_regkey.value
+    delegate_to: "{{ tower_host }}"
+
+  - debug: var=result_post
